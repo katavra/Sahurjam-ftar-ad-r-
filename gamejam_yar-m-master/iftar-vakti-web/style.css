@@ -1,0 +1,671 @@
+:root {
+    --bg-color: #3e2723;
+    /* Dark brown for tent aesthetic */
+    --floor-color: #d7ccc8;
+    --ui-bg: rgba(62, 39, 35, 0.9);
+    --primary: #8d6e63;
+    --secondary: rgba(255, 255, 255, 0.1);
+    --accent: #d84315;
+    /* Warm orange/red */
+    --kitchen: #f4a261;
+    --waiter: #264653;
+    --customer: #2a9d8f;
+    --star: #e9c46a;
+}
+
+body {
+    margin: 0;
+    padding: 0;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #111;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    overflow: hidden;
+}
+
+#game-container {
+    position: relative;
+    width: 100vw;
+    height: 100vh;
+    background: var(--floor-color);
+    background-image: url('arkaplanson.jpeg');
+    background-size: cover;
+    background-position: center;
+    border: none;
+    border-radius: 0;
+    box-shadow: none;
+    overflow: hidden;
+}
+
+/* HUD System */
+#hud {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 50px;
+    background: var(--bg-color);
+    color: white;
+    display: flex;
+    justify-content: flex-start;
+    gap: 30px;
+    padding-left: 20px;
+    align-items: center;
+    font-weight: bold;
+    font-size: 1.2rem;
+    z-index: 100;
+    border-bottom: 3px solid var(--primary);
+}
+
+.hud-button {
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid var(--star);
+    color: var(--star);
+    padding: 2px 8px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1.2rem;
+    transition: transform 0.2s;
+}
+
+.hud-button:hover {
+    transform: scale(1.1);
+    background: rgba(255, 255, 255, 0.2);
+}
+
+.hud-item {
+    padding: 5px 15px;
+    border-radius: 20px;
+    background: rgba(255, 255, 255, 0.1);
+}
+
+/* Kasa & Mutfak */
+#kitchen-area {
+    position: absolute;
+    top: calc(10% + 20px);
+    left: 8%;
+    width: 250px;
+    height: 600px;
+    background: transparent;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 20px 0;
+    box-sizing: border-box;
+    z-index: 20;
+}
+
+.interactive-zone {
+    cursor: pointer;
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.interactive-zone:hover {
+    transform: scale(1.05);
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2) inset;
+}
+
+/* Interaction Zones */
+#kitchen-counter,
+#trash-can {
+    background: rgba(0, 0, 0, 0.4);
+    border: 3px solid var(--primary);
+    border-radius: 8px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: white;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background 0.2s, transform 0.2s;
+}
+
+#trash-can {
+    position: absolute;
+    bottom: 260px;
+    left: 340px;
+    width: 120px;
+    height: 120px; /* Make it a bit taller to fit image */
+    background: url('cop_transparent.png');
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+    border: none;
+    z-index: 50;
+    color: transparent; /* hide text just in case */
+}
+
+#kitchen-counter {
+    width: 266px;
+    height: 800px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    align-items: center;
+    background: url('tesgah3_transparent.png');
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+    border: none;
+    border-radius: 0;
+    position: relative;
+    left: 0px; /* Reset left position since parent moved */
+    top: -20px;
+}
+.ingredient {
+    font-size: 2rem;
+    transition: transform 0.2s, filter 0.2s;
+}
+
+.text-meal {
+    font-size: 0.75rem;
+    background: rgba(0, 0, 0, 0.6);
+    color: white;
+    padding: 3px 5px;
+    border-radius: 5px;
+    margin-bottom: 3px;
+    border: 1px solid var(--primary);
+    text-align: center;
+    width: 50%;
+    cursor: pointer;
+    transition: transform 0.2s, background 0.2s;
+}
+
+.text-meal:hover {
+    transform: scale(1.1);
+    background: var(--primary);
+    color: var(--bg);
+    filter: drop-shadow(0 0 5px white);
+}
+
+/* Masalar */
+#dining-area {
+    position: absolute;
+    top: 130px;
+    left: 0;
+    width: 100%;
+    height: calc(100% - 130px);
+    pointer-events: none;
+}
+
+.table {
+    position: absolute;
+    width: 175px; /* Adjusted clickable area ratio */
+    height: 175px;
+    border-radius: 50%;
+    pointer-events: auto;
+}
+
+.table.locked {
+    opacity: 0.5;
+    filter: grayscale(100%);
+    pointer-events: none;
+}
+
+.table.locked .table-surface::after {
+    content: '🔒';
+    position: absolute;
+    font-size: 1.5rem;
+    color: white;
+    text-shadow: 0 0 5px black;
+}
+
+.table.interactive-zone:hover {
+    box-shadow: none;
+}
+
+.table-surface {
+    position: absolute;
+    top: -50px;
+    left: -50px;
+    width: 275px;
+    height: 275px;
+    background: url('masa3_transparent.png');
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+    border-radius: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: white;
+    font-size: 0.7rem;
+    font-weight: bold;
+    border: none;
+    z-index: 10;
+    transition: transform 0.2s, drop-shadow 0.2s;
+}
+
+.table.interactive-zone:hover .table-surface {
+    filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.5));
+}
+
+.chair {
+    display: none; /* Hide HTML chairs as the image has them */
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    background: #d4a373;
+    border-radius: 5px;
+    border: 2px solid #b5835a;
+    transition: background 0.3s;
+}
+
+.chair.occupied {
+    background: var(--customer);
+    /* Customer sitting */
+}
+
+.top-chair {
+    top: -5px;
+    left: 30px;
+}
+
+.bottom-chair {
+    bottom: -5px;
+    left: 30px;
+}
+
+.left-chair {
+    top: 30px;
+    left: -5px;
+}
+
+.right-chair {
+    top: 30px;
+    right: -5px;
+}
+
+/* Kapı / Giriş */
+#entrance {
+    position: absolute;
+    bottom: 0px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 100px;
+    height: 10px;
+    background: transparent;
+}
+
+/* Garson (Player) */
+#waiter {
+    position: absolute;
+    top: 250px;
+    left: 450px;
+    width: 60px;
+    height: 60px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 50;
+    transition: top 0.8s linear, left 0.8s linear;
+    transform: translate(-50%, -50%);
+}
+
+.waiter-img {
+    width: 60px;
+    height: 60px;
+    object-fit: cover;
+    border-radius: 50%;
+    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.3);
+}
+
+#tray {
+    position: absolute;
+    top: -15px;
+    right: -25px;
+    width: 60px;
+    height: 30px;
+    background: #e9ecef;
+    border: 2px solid #ced4da;
+    border-radius: 15px;
+    display: none;
+    /* Shows when holding food */
+    justify-content: center;
+    align-items: center;
+    font-size: 1rem;
+    padding: 0 5px;
+}
+
+/* Müşteri ve SiparişUI (Dinamik eklenecek JS'ten) */
+.customer-sprite {
+    position: absolute;
+    z-index: 40;
+    transition: top 3s cubic-bezier(0.25, 1, 0.5, 1), left 3s cubic-bezier(0.25, 1, 0.5, 1), transform 0.2s, box-shadow 0.2s;
+    transform: translate(-50%, -50%);
+}
+
+.customer-img {
+    width: 60px;
+    height: 60px;
+    object-fit: cover;
+    border-radius: 50%;
+    pointer-events: none;
+}
+
+.interactive-customer:hover {
+    transform: translate(-50%, -50%) scale(1.1);
+    box-shadow: 0 0 10px rgba(0,255,0,0.5);
+}
+
+.order-bubble {
+    position: absolute;
+    bottom: 110%;
+    left: 50%;
+    transform: translateX(-50%);
+    background: white;
+    border: 2px solid #ccc;
+    border-radius: 15px;
+    padding: 5px 10px;
+    font-size: 1.2rem;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    animation: float 2s infinite ease-in-out;
+    z-index: 60;
+    white-space: nowrap;
+}
+
+.order-bubble::after {
+    content: '';
+    position: absolute;
+    bottom: -8px;
+    left: 50%;
+    transform: translateX(-50%);
+    border-width: 8px 8px 0;
+    border-style: solid;
+    border-color: white transparent transparent transparent;
+}
+
+.patience-bar-container {
+    position: absolute;
+    top: -15px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 40px;
+    height: 6px;
+    background: #333;
+    border-radius: 3px;
+    overflow: hidden;
+}
+
+.patience-bar {
+    width: 100%;
+    height: 100%;
+    background: #00ff00;
+    transition: width 0.1s linear, background-color 0.3s;
+}
+
+@keyframes float {
+
+    0%,
+    100% {
+        transform: translate(-50%, 0);
+    }
+
+    50% {
+        transform: translate(-50%, -5px);
+    }
+}
+
+.ready-meal {
+    background: white;
+    border-radius: 50%;
+    width: 30px;
+    height: 30px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-left: 10px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    font-size: 1.2rem;
+    animation: popIn 0.3s ease-out;
+}
+
+@keyframes popIn {
+    0% {
+        transform: scale(0);
+    }
+
+    100% {
+        transform: scale(1);
+    }
+}
+
+/* Market Modal Styles */
+#market-modal {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.8);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 200;
+}
+
+.market-content {
+    background: var(--floor-color);
+    padding: 20px;
+    border-radius: 10px;
+    border: 4px solid var(--primary);
+    text-align: center;
+    width: 300px;
+    color: var(--bg-color);
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+}
+
+.market-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 10px 0;
+    padding: 10px;
+    background: rgba(255, 255, 255, 0.5);
+    border-radius: 5px;
+    font-weight: bold;
+}
+
+.market-item.bought {
+    opacity: 0.5;
+    text-decoration: line-through;
+}
+
+.buy-btn {
+    background: var(--primary);
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: background 0.2s;
+}
+
+.buy-btn:hover {
+    background: var(--accent);
+}
+
+#close-market {
+    margin-top: 15px;
+    padding: 8px 20px;
+    background: #666;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+.buy-btn:hover {
+    background: #4caf50;
+    color: white;
+}
+.bought {
+    opacity: 0.5;
+    pointer-events: none;
+}
+
+/* Lantern glowing dots */
+.lantern-dot {
+    position: absolute;
+    width: 14px;
+    height: 14px;
+    background-color: #fff9c4; /* Bright inner core */
+    border-radius: 50%;
+    box-shadow: 0 0 40px 25px rgba(255, 215, 0, 0.7);
+    z-index: 5; /* Keep below UI elements but above background */
+    pointer-events: none; /* So they don't block clicks */
+    animation: flash-glow 2s infinite alternate ease-in-out;
+    margin-left: -7px;
+    margin-top: -7px;
+}
+
+@keyframes flash-glow {
+    0% {
+        box-shadow: 0 0 25px 15px rgba(255, 215, 0, 0.5);
+        opacity: 0.8;
+    }
+    100% {
+        box-shadow: 0 0 55px 35px rgba(255, 230, 0, 0.9);
+        opacity: 1;
+    }
+}
+
+/* Night Time Overlay */
+#night-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(6, 15, 30, 0.6); /* Dark blue/black night tint */
+    pointer-events: none; /* Let clicks pass through */
+    z-index: 2; /* Over the background, under everything else */
+    opacity: 0; /* Hidden by default (Iftar/Daytime) */
+    transition: opacity 3s ease-in-out; /* Smooth transition into night */
+}
+
+/* Start Screen */
+#start-screen {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-image: url('arkaplanson.jpeg');
+    background-size: cover;
+    background-position: center;
+    /* Dark overlay so text stays readable */
+    background-blend-mode: normal;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999; /* Cover everything */
+}
+
+.game-title {
+    font-size: 5rem;
+    color: #ffd700;
+    text-shadow: 0 0 20px rgba(255, 215, 0, 0.5), 2px 2px 5px #000;
+    margin-bottom: 50px;
+    text-align: center;
+}
+
+.game-subtitle {
+    color: rgba(255, 255, 255, 0.7);
+    font-size: 1.4rem;
+    margin-bottom: 30px;
+}
+
+.start-btn-group {
+    display: flex;
+    gap: 30px;
+}
+
+.mode-btn {
+    padding: 20px 50px;
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: white;
+    border: 3px solid #ffcc80;
+    border-radius: 12px;
+    cursor: pointer;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.5);
+    transition: transform 0.2s, background-color 0.2s;
+}
+
+#btn-iftar {
+    background-color: #d84315; /* Warm orange-red for Iftar */
+}
+
+#btn-iftar:hover {
+    background-color: #ff5722;
+    transform: scale(1.05);
+}
+
+#btn-sahur {
+    background-color: #1a237e; /* Dark blue for Sahur/night */
+}
+
+#btn-sahur:hover {
+    background-color: #283593;
+    transform: scale(1.05);
+}
+
+
+/* Ramazan Topu */
+
+/* Müşteri Girişi Efektleri */
+#night-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 80, 0.4);
+    pointer-events: none;
+    z-index: 50;
+    opacity: 0;
+    transition: opacity 1s ease;
+}
+
+
+
+/* Ramazan Topu */
+#ramadan-cannon {
+    position: absolute;
+    top: 60%;
+    right: 200px;
+    transform: translateY(-50%);
+    width: 200px; /* Bayağı büyük bir top */
+    cursor: pointer;
+    z-index: 60;
+    transition: transform 0.2s;
+}
+
+#top-image {
+    width: 100%;
+    height: auto;
+    filter: drop-shadow(0 5px 15px rgba(0,0,0,0.4));
+}
+
+#ramadan-cannon:hover {
+    transform: translateY(-50%) scale(1.05);
+}
+
+.shake-cannon {
+    animation: cannon-shake 0.5s ease-in-out;
+}
+
+@keyframes cannon-shake {
+    0% { transform: translateY(-50%) scale(1) rotate(0); }
+    20% { transform: translateY(-50%) scale(1.1) rotate(-5deg); }
+    40% { transform: translateY(-50%) scale(1.1) rotate(5deg); }
+    60% { transform: translateY(-50%) scale(1.1) rotate(-5deg); }
+    80% { transform: translateY(-50%) scale(1.1) rotate(5deg); }
+    100% { transform: translateY(-50%) scale(1) rotate(0); }
+}

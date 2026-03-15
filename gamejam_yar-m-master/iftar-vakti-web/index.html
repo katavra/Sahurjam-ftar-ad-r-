@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>İftar Vakti 🌙</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div id="game-container">
+        <!-- Gece Efekti (Sahur için) -->
+        <div id="night-overlay"></div>
+        
+        <!-- HUD -->
+        <div id="hud">
+            <div class="hud-item" id="score-display">⭐ Skor: <span id="score">0</span></div>
+            <div class="hud-item" id="day-display">📅 Gün: <span id="day-counter">1</span> (<span id="time">120</span>s)</div>
+            <div class="hud-item" id="money-display">💰 Para: ₺<span id="money">0</span></div>
+            <button id="music-toggle" class="hud-button" title="Müzik Aç/Kapat">🔊</button>
+        </div>
+
+        <!-- Oyuna Giriş Ekranı (Start Screen) -->
+    <div id="start-screen">
+        <h1 class="game-title">İFTAR VAKTİ 🌙</h1>
+        <p class="game-subtitle">Oyun modunu seçin:</p>
+        <div class="start-btn-group">
+            <button class="mode-btn" id="btn-iftar">
+                🌞 İftar Vakti
+            </button>
+            <button class="mode-btn" id="btn-sahur">
+                🌙 Sahur Vakti
+            </button>
+        </div>
+    </div>
+
+    <!-- End of Day / Market Modal -->
+        <div id="market-modal" style="display: none;">
+            <div class="market-content">
+                <h2 id="day-summary-title">Gün Özeti</h2>
+                <div class="summary-stats">
+                    <p>Kazanılan Para: ₺<span id="summary-money">0</span></p>
+                    <p>Toplam Skor: <span id="summary-score">0</span></p>
+                </div>
+                <hr style="border-color: var(--primary); margin: 15px 0;">
+                
+                <h3>Market 🛒</h3>
+
+                <div class="market-item">
+                    <span>Masa 3 - ₺150</span>
+                    <button class="buy-btn" data-target="5" data-price="150">Satın Al</button>
+                </div>
+                <div class="market-item">
+                    <span>Masa 4 - ₺150</span>
+                    <button class="buy-btn" data-target="6" data-price="150">Satın Al</button>
+                </div>
+                <button id="close-market" style="background: var(--accent);">Sonraki Güne Başla →</button>
+            </div>
+        </div>
+
+    <!-- Fener Noktaları ve Halat (Görselin Üzerine Işık Vursun Diye) -->
+    <div id="lantern-string" style="position: absolute; top:0; left:0; width:100%; height:100%; pointer-events:none; z-index:4; display: none;">
+        <!-- Halat (Rope) -->
+        <svg width="100%" height="100%" viewBox="0 0 100 100" preserveAspectRatio="none">
+            <path d="M 30 15 Q 35 22 40 25 Q 45 22 50 10 Q 55 22 60 25 Q 65 22 70 15" stroke="#5D4037" stroke-width="4" fill="none" vector-effect="non-scaling-stroke" style="filter: drop-shadow(0px 2px 2px rgba(0,0,0,0.5));" />
+        </svg>
+
+        <!-- Üst Sıra -->
+        <div class="lantern-dot" style="top: 15%; left: 30%;"></div>
+        <div class="lantern-dot" style="top: 10%; left: 50%; transform: translateX(-50%);"></div>
+        <div class="lantern-dot" style="top: 15%; left: 70%; transform: translateX(-50%);"></div>
+        
+        <!-- İkinci Sıra (Daha merkeze ve aşağıya yakın) -->
+        <div class="lantern-dot" style="top: 25%; left: 40%; transform: translateX(-50%);"></div>
+        <div class="lantern-dot" style="top: 25%; left: 60%; transform: translateX(-50%);"></div>
+    </div>
+
+    <!-- Çöp Kutusu (Sol Alt) -->
+    <div id="trash-can" class="interactive-zone" data-type="trash">
+        <!-- Image applied via CSS -->
+    </div>
+
+    <!-- Mutfak Alanı -->
+        <div id="kitchen-area">
+            
+            <div id="kitchen-counter" class="interactive-zone" data-type="kitchen">
+                <!-- Emoji içerikleri kaldırıldı çünkü menü tıklandığında açılacak -->
+            </div>
+        </div>
+
+        <!-- Masalar -->
+        <div id="dining-area">
+
+            
+            <div class="table" data-type="table" data-id="2" style="top: 20%; left: 40%;">
+                <div class="table-surface"></div>
+                <div class="chair top-chair"></div>
+                <div class="chair bottom-chair"></div>
+                <div class="chair left-chair"></div>
+                <div class="chair right-chair"></div>
+            </div>
+
+            <div class="table" data-type="table" data-id="3" style="top: 20%; left: 70%;">
+                <div class="table-surface"></div>
+                <div class="chair top-chair"></div>
+                <div class="chair bottom-chair"></div>
+            </div>
+            
+
+            
+            <div class="table locked" data-type="table" data-id="5" style="top: 55%; left: 40%;">
+                <div class="table-surface"></div>
+                <div class="chair top-chair"></div>
+                <div class="chair bottom-chair"></div>
+                <div class="chair left-chair"></div>
+                <div class="chair right-chair"></div>
+            </div>
+
+            <div class="table locked" data-type="table" data-id="6" style="top: 55%; left: 70%;">
+                <div class="table-surface"></div>
+                <div class="chair top-chair"></div>
+                <div class="chair bottom-chair"></div>
+            </div>
+        </div>
+
+        <!-- Garson (Player) -->
+        <div id="waiter">
+            <img src="garson.jpeg" class="waiter-img" />
+            <div id="tray"></div>
+        </div>
+        
+        <!-- Ramazan Topu -->
+        <div id="ramadan-cannon">
+            <img src="cannon_new.png" id="top-image" alt="Ramazan Topu" />
+        </div>
+
+        <!-- Kapı (Müşteri Girişi Görünmez Çizgi) -->
+        <div id="entrance"></div>
+    </div>
+
+    <script src="src/Waiter.js"></script>
+    <script src="src/Customer.js"></script>
+    <script src="src/Kitchen.js"></script>
+    <script src="src/main.js"></script>
+</body>
+</html>
